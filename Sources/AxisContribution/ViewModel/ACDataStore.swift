@@ -38,52 +38,37 @@ class ACDataStore: ObservableObject {
     ///   - axisMode: The axis mode of the component.
     func setup(constant: ACConstant, source sourceDates: [Date], axisMode: ACAxisMode = .horizontal) {
         self.constant = constant
-        mappingDatas(createDatas(axisMode: axisMode), sourceDates)
+        mappingDatas(axisMode: axisMode, sourceDates: sourceDates)
     }
     
     /// Generate data from start date to end date.
     /// - Parameter axisMode: The axis mode of the component.
     /// - Returns: An array of data.
-    private func createDatas(axisMode: ACAxisMode) -> [ACData] {
-        var sequenceDatas = [ACData]()
+    private func mappingDatas(axisMode: ACAxisMode, sourceDates: [Date]) {
         var newDatas = [[ACData]]()
         var dateWeekly = Date.datesWeekly(from: constant.fromDate, to: constant.toDate)
         if axisMode == .vertical {
             dateWeekly = dateWeekly.reversed()
         }
         dateWeekly.forEach { date in
-            let datas = date.datesInWeek.map { date in
-                ACData(date: date)
+            let datas = date.datesInWeek.map { date -> ACData in
+                let data = ACData(date: date, count: getDateCount(sourceDates: sourceDates, date: date))
+                return data
             }
             newDatas.append(datas)
-            sequenceDatas.append(contentsOf: datas)
         }
         self.datas = newDatas
-        return sequenceDatas
     }
-    
-    /// Merges contribution date counts into your data.
-    /// - Parameters:
-    ///   - sequenceDatas: An array of all data.
-    ///   - sourceDates: An array of contributed dates.
-    private func mappingDatas(_ sequenceDatas: [ACData], _ sourceDates: [Date]) {
-        guard !datas.isEmpty else { return }
-        for date in sourceDates {
-            if let data = getData(sequenceDatas: sequenceDatas, date: date) {
-                data.count += 1
-            }
-        }
-    }
-    
+
     /// Returns data corresponding to the date you pass in.
     /// - Parameters:
-    ///   - sequenceDatas: An array of all data.
+    ///   - sourceDates: An array of contributed dates.
     ///   - date: The date required to return the data.
     /// - Returns: -
-    private func getData(sequenceDatas: [ACData], date: Date) -> ACData? {
-        let datas = sequenceDatas.filter { data in
-            data.date.startOfDay == date.startOfDay
+    private func getDateCount(sourceDates: [Date], date: Date) -> Int {
+        let dates = sourceDates.filter { d in
+            Calendar.current.isDate(d, inSameDayAs: date)
         }
-        return datas.isEmpty ? nil : datas[0]
+        return dates.count
     }
 }
