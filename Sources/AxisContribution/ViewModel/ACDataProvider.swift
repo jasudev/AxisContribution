@@ -1,8 +1,8 @@
 //
-//  ACDataStore.swift
+//  ACDataProvider.swift
 //  AxisContribution
 //
-//  Created by jasu on 2022/02/23.
+//  Created by jasu on 2022/02/26.
 //  Copyright (c) 2022 jasu All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,29 +25,41 @@
 
 import SwiftUI
 
-/// A ViewModel that manages grid data.
-public class ACDataStore: ObservableObject {
+/// Create and provide data.
+public class ACDataProvider {
     
-    @Published var constant: ACConstant = .init()
-    @Published var datas: [[ACData]] = [[]]
-
-    /// A method that creates data.
-    /// - Parameters:
-    ///   - constant: Settings that define the contribution view.
-    ///   - externalDatas: Externally passed data. If data exists, external data takes precedence.
-    func setup(constant: ACConstant, external externalDatas: [[ACData]]) {
-        self.constant = constant
-        self.datas = externalDatas
-    }
+    public static let shared = ACDataProvider()
     
-    /// A method that creates data.
+    /// Generate data from start date to end date.
     /// - Parameters:
     ///   - constant: Settings that define the contribution view.
     ///   - sourceDates: An array of contributed dates.
-    func setup(constant: ACConstant, source sourceDates: [Date]? = nil) {
-        self.constant = constant
-        if let sourceDates = sourceDates {
-            self.datas = ACDataProvider.shared.mappedData(constant: constant, source: sourceDates)
+    /// - Returns: mapped data
+    public func mappedData(constant: ACConstant, source sourceDates: [Date]) -> [[ACData]] {
+        var newDatas = [[ACData]]()
+        var dateWeekly = Date.datesWeekly(from: constant.fromDate, to: constant.toDate)
+        if constant.axisMode == .vertical {
+            dateWeekly = dateWeekly.reversed()
         }
+        dateWeekly.forEach { date in
+            let datas = date.datesInWeek.map { date -> ACData in
+                let data = ACData(date: date, count: getDateCount(sourceDates: sourceDates, date: date))
+                return data
+            }
+            newDatas.append(datas)
+        }
+        return newDatas
+    }
+
+    /// Returns data corresponding to the date you pass in.
+    /// - Parameters:
+    ///   - sourceDates: An array of contributed dates.
+    ///   - date: The date required to return the data.
+    /// - Returns: -
+    private func getDateCount(sourceDates: [Date], date: Date) -> Int {
+        let dates = sourceDates.filter { d in
+            Calendar.current.isDate(d, inSameDayAs: date)
+        }
+        return dates.count
     }
 }

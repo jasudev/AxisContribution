@@ -46,8 +46,9 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
     @Environment(\.colorScheme) private var colorScheme
     @StateObject private var store = ACDataStore()
     
-    private let constant: ACConstant
-    private let sourceDatas: [Date]
+    private var constant: ACConstant = .init()
+    private var sourceDatas: [Date]? = nil
+    private var externalDatas: [[ACData]]? = nil
     
     public var background: ((ACIndexSet?, ACData?) -> B)? = nil
     public var foreground: ((ACIndexSet?, ACData?) -> F)? = nil
@@ -172,12 +173,16 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
     
     /// Fetch data.
     private func fetch() {
-        store.setup(constant: self.constant, source: self.sourceDatas, axisMode: constant.axisMode)
+        if let externalDatas = externalDatas {
+            store.setup(constant: self.constant, external: externalDatas)
+        }else {
+            store.setup(constant: self.constant, source: self.sourceDatas)
+        }
     }
 }
 
 public extension AxisContribution where B == EmptyView, F == EmptyView {
-    
+
     /// Initializes `AxisContribution`
     /// - Parameters:
     ///   - constant: Settings that define the contribution view.
@@ -185,6 +190,15 @@ public extension AxisContribution where B == EmptyView, F == EmptyView {
     init(constant: ACConstant = .init(), source sourceDates: [Date] = []) {
         self.constant = constant
         self.sourceDatas = sourceDates
+    }
+    
+    /// Initializes `AxisContribution`
+    /// - Parameters:
+    ///   - constant: Settings that define the contribution view.
+    ///   - externalDatas: Externally passed data. If data exists, external data takes precedence.
+    init(constant: ACConstant = .init(), external externalDatas: [[ACData]]? = nil) {
+        self.constant = constant
+        self.externalDatas = externalDatas
     }
 }
 
@@ -196,7 +210,8 @@ public extension AxisContribution where B : View, F : View {
     ///   - sourceDates: An array of contributed dates.
     ///   - background: The view that is the background of the row view.
     ///   - foreground: The view that is the foreground of the row view.
-    init(constant: ACConstant = .init(), source sourceDates: [Date] = [],
+    init(constant: ACConstant = .init(),
+         source sourceDates: [Date] = [],
          @ViewBuilder background: @escaping (ACIndexSet?, ACData?) -> B,
          @ViewBuilder foreground: @escaping (ACIndexSet?, ACData?) -> F) {
         self.constant = constant
@@ -204,10 +219,25 @@ public extension AxisContribution where B : View, F : View {
         self.background = background
         self.foreground = foreground
     }
+    
+    /// Initializes `AxisContribution`
+    /// - Parameters:
+    ///   - constant: Settings that define the contribution view.
+    ///   - background: The view that is the background of the row view.
+    ///   - foreground: The view that is the foreground of the row view.
+    ///   - externalDatas: Externally passed data. If data exists, external data takes precedence.
+    init(constant: ACConstant = .init(), external externalDatas: [[ACData]]? = nil,
+         @ViewBuilder background: @escaping (ACIndexSet?, ACData?) -> B,
+         @ViewBuilder foreground: @escaping (ACIndexSet?, ACData?) -> F) {
+        self.constant = constant
+        self.background = background
+        self.foreground = foreground
+        self.externalDatas = externalDatas
+    }
 }
 
 struct AxisContribution_Previews: PreviewProvider {
     static var previews: some View {
-        AxisContribution()
+        AxisContribution(constant: .init(), source: [])
     }
 }

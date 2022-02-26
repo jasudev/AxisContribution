@@ -26,7 +26,7 @@
 import SwiftUI
 
 /// Defines the horizontal/vertical orientation of the contribution view.
-public enum ACAxisMode {
+public enum ACAxisMode: Equatable {
     /// Display the view horizontally.
     case horizontal
     /// Displays the view vertically.
@@ -74,5 +74,14 @@ public struct ACConstant: Equatable {
         self.levelSpacing = levelSpacing
         self.axisMode = axisMode
         self.font = font
+    }
+    
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.fromDate == rhs.fromDate &&
+        lhs.toDate == rhs.toDate &&
+        lhs.spacing == rhs.spacing &&
+        lhs.levelSpacing == rhs.levelSpacing &&
+        lhs.axisMode == rhs.axisMode &&
+        lhs.font == rhs.font
     }
 }
