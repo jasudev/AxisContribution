@@ -112,12 +112,12 @@ struct ACGridStack<B, F>: View where B: View, F: View {
         ZStack {
             if data.date.startOfDay > Date().startOfDay {
                 background?(ACIndexSet(column: column, row: row), data)
-                    .takeSize($rowSize)
                     .hidden()
             }else {
                 background?(ACIndexSet(column: column, row: row), data)
                 foreground?(ACIndexSet(column: column, row: row), data)
                     .opacity(getOpacity(count: data.count))
+                    .takeSize($rowSize)
             }
         }
     }
