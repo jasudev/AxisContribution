@@ -54,7 +54,7 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
     public var foreground: ((ACIndexSet?, ACData?) -> F)? = nil
     
     private var defaultRowSize: CGFloat = 11
-    @Namespace private var bttomTrailing
+    @Namespace private var trailing
     
     public var body: some View {
         ScrollViewReader { proxy in
@@ -65,9 +65,9 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
                             content
                             Spacer()
                                 .frame(width: 0, height: 0)
-                                .id(bttomTrailing)
+                                .id(trailing)
                                 .onAppear {
-                                    proxy.scrollTo(bttomTrailing, anchor: .trailing)
+                                    proxy.scrollTo(trailing, anchor: .trailing)
                                 }
                         }
                         .contentShape(Rectangle())
