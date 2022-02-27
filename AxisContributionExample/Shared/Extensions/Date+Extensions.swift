@@ -31,4 +31,10 @@ extension Date {
     var startOfDay: Date {
         return Calendar.current.startOfDay(for: self)
     }
+    
+    var day: Int {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.day], from: self)
+        return components.day ?? 1
+    }
 }

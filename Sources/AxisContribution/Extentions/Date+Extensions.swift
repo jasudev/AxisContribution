@@ -33,7 +33,7 @@ extension Date {
         while date <= toDate {
             dates.append(date)
             guard let newDate = Calendar.current.date(byAdding: .day, value: 7, to: date) else { break }
-            date = newDate
+            date = newDate.startOfWeek
         }
         return dates
     }
@@ -55,7 +55,7 @@ extension Date {
     var datesInWeek: [Date] {
         var dates: [Date] = []
         for i in 0..<7 {
-            if let date = Calendar.current.date(byAdding: .day, value: i, to: startOfWeek) {
+            if let date = Calendar.current.date(byAdding: .weekday, value: i, to: startOfWeek) {
                 dates.append(date)
             }
         }
@@ -63,9 +63,8 @@ extension Date {
     }
     
     var isToday: Bool {
-        let gregorian = Calendar(identifier: .gregorian)
-        let currentDate = gregorian.dateComponents([.day, .month, .year], from: self)
-        let today = gregorian.dateComponents([.day, .month, .year], from: Date())
+        let currentDate = Calendar.current.dateComponents([.day, .month, .year], from: self)
+        let today = Calendar.current.dateComponents([.day, .month, .year], from: Date())
         return currentDate == today
     }
     
@@ -88,9 +87,8 @@ extension Date {
     }
 
     var startOfWeek: Date {
-        var gregorian = Calendar(identifier: .gregorian)
-        gregorian.firstWeekday = 1
-        let monday = gregorian.date(from: gregorian.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))
+        let current = Calendar.current
+        let monday = current.date(from: current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))
         return monday!
     }
     

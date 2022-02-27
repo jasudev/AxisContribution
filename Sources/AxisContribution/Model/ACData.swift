@@ -29,10 +29,10 @@ import SwiftUI
 public class ACData: Equatable {
     
     /// Current date.
-    var date: Date
+    public var date: Date
     
     /// The number contributed to the current date.
-    var count: Int
+    public var count: Int
     
     /// Initializes `ACData`
     /// - Parameters:
