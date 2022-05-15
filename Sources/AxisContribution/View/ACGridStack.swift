@@ -51,13 +51,13 @@ struct ACGridStack<B, F>: View where B: View, F: View {
             if constant.axisMode == .horizontal {
                 HStack(alignment: .top, spacing: spacing) {
                     VStack(alignment: .trailing, spacing: 0) {
-                        Text("Mon")
+                        Text("M")
                             .frame(height: rowSize.height)
                             .padding(.top, rowSize.height * 2 + spacing * 2)
-                        Text("Wed")
+                        Text("W")
                             .frame(height: rowSize.height)
                             .padding(.top, rowSize.height + spacing * 2)
-                        Text("Fri")
+                        Text("F")
                             .frame(height: rowSize.height)
                             .padding(.top, rowSize.height + spacing * 2)
                     }
@@ -77,15 +77,15 @@ struct ACGridStack<B, F>: View where B: View, F: View {
                 VStack(alignment: .leading, spacing: spacing) {
                     ZStack(alignment: .bottom) {
                         let size = titleWidth
-                        Text("Mon")
+                        Text("M")
                             .offset(x: size + (rowSize.width * 1 + spacing * 2))
-                        Text("Wed")
+                        Text("W")
                             .offset(x: size + (rowSize.width * 3 + spacing * 4))
-                        Text("Fri")
+                        Text("F")
                             .offset(x: size + (rowSize.width * 5 + spacing * 5))
                     }
                     ForEach(Array(store.datas.enumerated()), id: \.offset) { column, datas in
-                        LazyHStack(alignment: .top, spacing: spacing) {
+                        HStack(alignment: .top, spacing: spacing) {
                             Rectangle()
                                 .fill(Color.clear)
                                 .frame(width: titleWidth, height: rowSize.height)
