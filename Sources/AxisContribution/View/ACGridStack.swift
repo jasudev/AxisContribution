@@ -62,7 +62,7 @@ struct ACGridStack<B, F>: View where B: View, F: View {
                             .padding(.top, rowSize.height + spacing * 2)
                     }
                     ForEach(Array(store.datas.enumerated()), id: \.offset) { column, datas in
-                        VStack(alignment: .leading, spacing: spacing) {
+                        LazyVStack(alignment: .leading, spacing: spacing) {
                             Rectangle()
                                 .fill(Color.clear)
                                 .frame(width: rowSize.height, height: rowSize.height)
@@ -85,7 +85,7 @@ struct ACGridStack<B, F>: View where B: View, F: View {
                             .offset(x: size + (rowSize.width * 5 + spacing * 5))
                     }
                     ForEach(Array(store.datas.enumerated()), id: \.offset) { column, datas in
-                        HStack(alignment: .top, spacing: spacing) {
+                        LazyHStack(alignment: .top, spacing: spacing) {
                             Rectangle()
                                 .fill(Color.clear)
                                 .frame(width: titleWidth, height: rowSize.height)
