@@ -99,8 +99,8 @@ extension Date {
     }
     
     var monthTitle: String {
-        let monthTitles = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
         let calendar = Calendar.current
+        let monthTitles = calendar.shortMonthSymbols
         let components = calendar.dateComponents([.month], from: self)
         let month = components.month
         return monthTitles[month! - 1]
