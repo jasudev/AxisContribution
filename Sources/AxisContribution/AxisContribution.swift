@@ -119,23 +119,26 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
     }
     
     /// A view that displays level unit information.
+    @ViewBuilder
     private var levelView: some View {
-        HStack(spacing: constant.spacing * 0.5) {
-            Text("Less")
-                .font(constant.font)
-                .opacity(0.6)
-            HStack(spacing: 0) {
-                ForEach(ACLevel.allCases, id:\.self) { level in
-                    ZStack {
-                        getBackgroundView(nil, nil)
-                        getForegroundView(nil, nil)
-                            .opacity(level.opacity)
-                    }
-                }.scaleEffect(0.82)
+        if constant.showLevelView {
+            HStack(spacing: constant.spacing * 0.5) {
+                Text("Less")
+                    .font(constant.font)
+                    .opacity(0.6)
+                HStack(spacing: 0) {
+                    ForEach(ACLevel.allCases, id:\.self) { level in
+                        ZStack {
+                            getBackgroundView(nil, nil)
+                            getForegroundView(nil, nil)
+                                .opacity(level.opacity)
+                        }
+                    }.scaleEffect(0.82)
+                }
+                Text("More")
+                    .font(constant.font)
+                    .opacity(0.6)
             }
-            Text("More")
-                .font(constant.font)
-                .opacity(0.6)
         }
     }
     
