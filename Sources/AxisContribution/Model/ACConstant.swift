@@ -53,6 +53,9 @@ public struct ACConstant: Equatable {
     
     /// The font used for text.
     public var font: Font
+
+    /// Whether the level label below the grid view is visible
+    public var showLevelView: Bool
     
     /// Initializes `ACConstant`
     /// - Parameters:
@@ -62,18 +65,21 @@ public struct ACConstant: Equatable {
     ///   - levelSpacing: A number that separates units between contribution levels. The default value is `3`.
     ///   - axisMode: The axis mode of the component. The default value is `.horizontal`.
     ///   - font: The font used for text. The default value is `.system(size: 9)`.
+    ///   - showLevelView: Whether the level label below the grid view is visible. The default value is `true`.
     public init(from fromDate: Date? = nil,
                 to toDate: Date? = nil,
                 spacing: CGFloat = 4,
                 levelSpacing: Int = 3,
                 axisMode: ACAxisMode = .horizontal,
-                font: Font = .system(size: 9)) {
+                font: Font = .system(size: 9),
+                showLevelView: Bool = true) {
         self.fromDate = fromDate == nil ? Date().dateYearAgo : fromDate!
         self.toDate = toDate == nil ? Date() : toDate!
         self.spacing = spacing
         self.levelSpacing = levelSpacing
         self.axisMode = axisMode
         self.font = font
+        self.showLevelView = showLevelView
     }
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
@@ -82,6 +88,7 @@ public struct ACConstant: Equatable {
         lhs.spacing == rhs.spacing &&
         lhs.levelSpacing == rhs.levelSpacing &&
         lhs.axisMode == rhs.axisMode &&
-        lhs.font == rhs.font
+        lhs.font == rhs.font &&
+        lhs.showLevelView == rhs.showLevelView
     }
 }
