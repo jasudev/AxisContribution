@@ -71,23 +71,23 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
                                 }
                         }
                         .contentShape(Rectangle())
-                        .onAppear(perform: {
-                            self.fetch()
-                        })
                     }else {
                         VStack(spacing: 0) {
                             content
                         }
                         .contentShape(Rectangle())
-                        .onAppear(perform: {
-                            self.fetch()
-                        })
                     }
                 }
                 levelView
             }
         }
         .environmentObject(store)
+        .onChange(of: sourceDatas) { newValue in
+            store.setup(constant: self.constant, source: newValue)
+        }
+        .onAppear(perform: {
+            self.fetch()
+        })
     }
     
     //MARK: - Properties

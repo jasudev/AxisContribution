@@ -16,12 +16,13 @@ struct ContentView: View {
     @State private var constant: ACConstant = .init(axisMode: .horizontal)
     @State private var rowSize: CGFloat = 11
     @State private var rowImageName: String = ""
+    @State private var dates: [Date] = []
     
     var body: some View {
         VStack {
             Spacer()
             // AxisContribution(constant: constant, source: getDates())
-            AxisContribution(constant: constant, source: getDates()) { indexSet, data in
+            AxisContribution(constant: constant, source: dates) { indexSet, data in
                 if rowImageName.isEmpty {
                     defaultBackground
                 }else {
@@ -62,8 +63,15 @@ struct ContentView: View {
                 Text("Vertical").tag(ACAxisMode.vertical)
             }
             .pickerStyle(.segmented)
+            Button("Refresh Dates") {
+                dates = getDates()
+            }
+            .padding()
         }
         .padding()
+        .onAppear {
+            dates = getDates()
+        }
     }
     
     private var defaultBackground: some View {
