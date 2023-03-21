@@ -123,7 +123,7 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
     private var levelView: some View {
         if constant.showLevelView {
             HStack(spacing: constant.spacing * 0.5) {
-                Text("Less")
+                Text(constant.levelLabel == .moreOrLess ? "Less" : "0")
                     .font(constant.font)
                     .opacity(0.6)
                 HStack(spacing: 0) {
@@ -135,7 +135,7 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
                         }
                     }.scaleEffect(0.82)
                 }
-                Text("More")
+                Text(constant.levelLabel == .moreOrLess ? "More" : "\(constant.levelSpacing * 4)+")
                     .font(constant.font)
                     .opacity(0.6)
             }

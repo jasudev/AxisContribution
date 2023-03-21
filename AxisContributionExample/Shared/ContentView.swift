@@ -13,7 +13,7 @@ struct ContentView: View {
     
     @Environment(\.colorScheme) private var colorScheme
     
-    @State private var constant: ACConstant = .init(axisMode: .horizontal)
+    @State private var constant: ACConstant = .init(axisMode: .horizontal, levelLabel: .number)
     @State private var rowSize: CGFloat = 11
     @State private var rowImageName: String = ""
     @State private var dates: [Date] = []
