@@ -33,6 +33,7 @@ public enum ACAxisMode: Equatable {
     case vertical
 }
 
+/// Defines the label type of level label below the grid view.
 public enum ACLevelLavel: Equatable {
     case moreOrLess
     case number
@@ -62,6 +63,7 @@ public struct ACConstant: Equatable {
     /// Whether the level label below the grid view is visible
     public var showLevelView: Bool
     
+    /// The label type of the level label.
     public var levelLabel: ACLevelLavel
     
     /// Initializes `ACConstant`
@@ -73,6 +75,7 @@ public struct ACConstant: Equatable {
     ///   - axisMode: The axis mode of the component. The default value is `.horizontal`.
     ///   - font: The font used for text. The default value is `.system(size: 9)`.
     ///   - showLevelView: Whether the level label below the grid view is visible. The default value is `true`.
+    ///   - levelLabel: The label type of the level label. The default value is `.moreOrLess`.
     public init(from fromDate: Date? = nil,
                 to toDate: Date? = nil,
                 spacing: CGFloat = 4,
