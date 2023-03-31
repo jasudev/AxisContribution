@@ -33,6 +33,12 @@ public enum ACAxisMode: Equatable {
     case vertical
 }
 
+/// Defines the label type of level label below the grid view.
+public enum ACLevelLavel: Equatable {
+    case moreOrLess
+    case number
+}
+
 /// Settings that define the contribution view.
 public struct ACConstant: Equatable {
     
@@ -57,6 +63,9 @@ public struct ACConstant: Equatable {
     /// Whether the level label below the grid view is visible
     public var showLevelView: Bool
     
+    /// The label type of the level label.
+    public var levelLabel: ACLevelLavel
+    
     /// Initializes `ACConstant`
     /// - Parameters:
     ///   - fromDate: The start date to display the list of contributions. The default value is `1 year from today.`.
@@ -66,13 +75,15 @@ public struct ACConstant: Equatable {
     ///   - axisMode: The axis mode of the component. The default value is `.horizontal`.
     ///   - font: The font used for text. The default value is `.system(size: 9)`.
     ///   - showLevelView: Whether the level label below the grid view is visible. The default value is `true`.
+    ///   - levelLabel: The label type of the level label. The default value is `.moreOrLess`.
     public init(from fromDate: Date? = nil,
                 to toDate: Date? = nil,
                 spacing: CGFloat = 4,
                 levelSpacing: Int = 3,
                 axisMode: ACAxisMode = .horizontal,
                 font: Font = .system(size: 9),
-                showLevelView: Bool = true) {
+                showLevelView: Bool = true,
+                levelLabel: ACLevelLavel = .moreOrLess) {
         self.fromDate = fromDate == nil ? Date().dateYearAgo : fromDate!
         self.toDate = toDate == nil ? Date() : toDate!
         self.spacing = spacing
@@ -80,6 +91,7 @@ public struct ACConstant: Equatable {
         self.axisMode = axisMode
         self.font = font
         self.showLevelView = showLevelView
+        self.levelLabel = levelLabel
     }
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
