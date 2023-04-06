@@ -85,6 +85,11 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
         .onChange(of: sourceDatas) { newValue in
             store.setup(constant: self.constant, source: newValue)
         }
+        .onChange(of: externalDatas) { newValue in
+            if let newValue {
+                store.setup(constant: self.constant, external: newValue)
+            }
+        }
         .onAppear(perform: {
             self.fetch()
         })
