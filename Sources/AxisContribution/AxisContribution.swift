@@ -47,7 +47,7 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
     @StateObject private var store = ACDataStore()
     
     private var constant: ACConstant = .init()
-    private var sourceDatas: [Date]? = nil
+    private var sourceDatas: [Date: ACData] = [:]
     private var externalDatas: [[ACData]]? = nil
     
     public var background: ((ACIndexSet?, ACData?) -> B)? = nil
@@ -84,11 +84,6 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
         .environmentObject(store)
         .onChange(of: sourceDatas) { newValue in
             store.setup(constant: self.constant, source: newValue)
-        }
-        .onChange(of: externalDatas) { newValue in
-            if let newValue {
-                store.setup(constant: self.constant, external: newValue)
-            }
         }
         .onAppear(perform: {
             self.fetch()
@@ -195,7 +190,7 @@ public extension AxisContribution where B == EmptyView, F == EmptyView {
     /// - Parameters:
     ///   - constant: Settings that define the contribution view.
     ///   - sourceDates: An array of contributed dates.
-    init(constant: ACConstant = .init(), source sourceDates: [Date] = []) {
+    init(constant: ACConstant = .init(), source sourceDates: [Date: ACData] = [:]) {
         self.constant = constant
         self.sourceDatas = sourceDates
     }
@@ -219,7 +214,7 @@ public extension AxisContribution where B : View, F : View {
     ///   - background: The view that is the background of the row view.
     ///   - foreground: The view that is the foreground of the row view.
     init(constant: ACConstant = .init(),
-         source sourceDates: [Date] = [],
+         source sourceDates: [Date: ACData] = [:],
          @ViewBuilder background: @escaping (ACIndexSet?, ACData?) -> B,
          @ViewBuilder foreground: @escaping (ACIndexSet?, ACData?) -> F) {
         self.constant = constant
@@ -246,6 +241,6 @@ public extension AxisContribution where B : View, F : View {
 
 struct AxisContribution_Previews: PreviewProvider {
     static var previews: some View {
-        AxisContribution(constant: .init(), source: [])
+        AxisContribution(constant: .init(), source: [:])
     }
 }

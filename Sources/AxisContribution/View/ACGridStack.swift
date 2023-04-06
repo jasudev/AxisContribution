@@ -180,6 +180,6 @@ extension ACGridStack where B : View, F : View {
 
 struct ACGridStack_Previews: PreviewProvider {
     static var previews: some View {
-        AxisContribution(constant: .init(), source: [])
+        AxisContribution(constant: .init(), source: [:])
     }
 }
