@@ -38,7 +38,7 @@ public class ACData: Equatable {
     /// - Parameters:
     ///   - date: Current date.
     ///   - count: The number contributed to the current date. The default value is `0`.
-    init(date: Date, count: Int = 0) {
+    public init(date: Date, count: Int = 0) {
         self.date = date
         self.count = count
     }
