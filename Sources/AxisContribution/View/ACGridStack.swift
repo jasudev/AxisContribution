@@ -131,7 +131,7 @@ struct ACGridStack<B, F>: View where B: View, F: View {
                             .takeSize($_titleSize)
                     }
                 } else {
-                    let date = store.datas[column][0].date.monthTitle
+                    let date = store.datas[column][0].date
                     if date > constant.fromDate && date < constant.toDate {
                         Text(date.monthTitle)
                             .lineLimit(1)
