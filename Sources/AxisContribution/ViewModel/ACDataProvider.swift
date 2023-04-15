@@ -35,7 +35,7 @@ public class ACDataProvider {
     ///   - constant: Settings that define the contribution view.
     ///   - sourceDates: An array of contributed dates.
     /// - Returns: mapped data
-    public func mappedData(constant: ACConstant, source sourceDates: [Date]) -> [[ACData]] {
+    public func mappedData(constant: ACConstant, source sourceDates: [Date: ACData]) -> [[ACData]] {
         var newDatas = [[ACData]]()
         var dateWeekly = Date.datesWeekly(from: constant.fromDate, to: constant.toDate)
         if constant.axisMode == .vertical {
@@ -43,23 +43,14 @@ public class ACDataProvider {
         }
         dateWeekly.forEach { date in
             let datas = date.datesInWeek.map { date -> ACData in
-                let data = ACData(date: date, count: getDateCount(sourceDates: sourceDates, date: date))
-                return data
+                if let data = sourceDates[date] {
+                    return data
+                } else {
+                    return ACData(date: date, count: 0)
+                }
             }
             newDatas.append(datas)
         }
         return newDatas
-    }
-
-    /// Returns data corresponding to the date you pass in.
-    /// - Parameters:
-    ///   - sourceDates: An array of contributed dates.
-    ///   - date: The date required to return the data.
-    /// - Returns: -
-    private func getDateCount(sourceDates: [Date], date: Date) -> Int {
-        let dates = sourceDates.filter { d in
-            Calendar.current.isDate(d, inSameDayAs: date)
-        }
-        return dates.count
     }
 }

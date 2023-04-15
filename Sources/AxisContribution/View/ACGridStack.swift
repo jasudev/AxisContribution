@@ -27,12 +27,11 @@ import SwiftUI
 
 /// A view that represents a grid view.
 struct ACGridStack<B, F>: View where B: View, F: View {
-    
     @EnvironmentObject private var store: ACDataStore
     
     let constant: ACConstant
-    var background: ((ACIndexSet?, ACData?) -> B)? = nil
-    var foreground: ((ACIndexSet?, ACData?) -> F)? = nil
+    var background: ((ACIndexSet?, ACData?) -> B)?
+    var foreground: ((ACIndexSet?, ACData?) -> F)?
     
     @State private var rowSize: CGSize = .zero
     @State private var titleWidth: CGFloat = .zero
@@ -43,7 +42,8 @@ struct ACGridStack<B, F>: View where B: View, F: View {
             .font(store.constant.font)
     }
     
-    //MARK: - Properties
+    // MARK: - Properties
+
     /// Property that displays the grid view.
     private var content: some View {
         let spacing = store.constant.spacing
@@ -66,14 +66,14 @@ struct ACGridStack<B, F>: View where B: View, F: View {
                             Rectangle()
                                 .fill(Color.clear)
                                 .frame(width: rowSize.height, height: rowSize.height)
-                                .overlay(getMonthTitle(column) ,alignment: .leading)
+                                .overlay(getMonthTitle(column), alignment: .leading)
                             ForEach(Array(datas.enumerated()), id: \.offset) { row, data in
                                 getRowView(column: column, row: row, data: data)
                             }
                         }
                     }
                 }
-            }else {
+            } else {
                 VStack(alignment: .leading, spacing: spacing) {
                     ZStack(alignment: .bottom) {
                         let size = titleWidth
@@ -100,7 +100,7 @@ struct ACGridStack<B, F>: View where B: View, F: View {
         }
     }
     
-    //MARK: - Methods
+    // MARK: - Methods
     
     /// A method that returns a row view.
     /// - Parameters:
@@ -110,15 +110,10 @@ struct ACGridStack<B, F>: View where B: View, F: View {
     /// - Returns: -
     private func getRowView(column: Int, row: Int, data: ACData) -> some View {
         ZStack {
-            if data.date.startOfDay > Date().startOfDay {
-                background?(ACIndexSet(column: column, row: row), data)
-                    .hidden()
-            }else {
-                background?(ACIndexSet(column: column, row: row), data)
-                foreground?(ACIndexSet(column: column, row: row), data)
-                    .opacity(getOpacity(count: data.count))
-                    .takeSize($rowSize)
-            }
+            background?(ACIndexSet(column: column, row: row), data)
+            foreground?(ACIndexSet(column: column, row: row), data)
+                .opacity(getOpacity(count: data.count))
+                .takeSize($rowSize)
         }
     }
     
@@ -135,15 +130,18 @@ struct ACGridStack<B, F>: View where B: View, F: View {
                             .fixedSize(horizontal: true, vertical: false)
                             .takeSize($_titleSize)
                     }
-                }else {
-                    Text(store.datas[column][0].date.monthTitle)
-                        .lineLimit(1)
-                        .fixedSize(horizontal: true, vertical: false)
-                        .takeSize($_titleSize)
+                } else {
+                    let date = store.datas[column][0].date
+                    if date > constant.fromDate && date < constant.toDate {
+                        Text(date.monthTitle)
+                            .lineLimit(1)
+                            .fixedSize(horizontal: true, vertical: false)
+                            .takeSize($_titleSize)
+                    }
                 }
             }
         }
-        .onChange(of: _titleSize) { newValue in
+        .onChange(of: _titleSize) { _ in
             titleWidth = max(titleWidth, _titleSize.width)
         }
     }
@@ -154,21 +152,20 @@ struct ACGridStack<B, F>: View where B: View, F: View {
     private func getOpacity(count: Int) -> CGFloat {
         if count == 0 {
             return ACLevel.zero.opacity
-        }else if ACLevel.first.rawValue * store.constant.levelSpacing >= count {
+        } else if ACLevel.first.rawValue * store.constant.levelSpacing >= count {
             return ACLevel.first.opacity
-        }else if ACLevel.second.rawValue * store.constant.levelSpacing >= count {
+        } else if ACLevel.second.rawValue * store.constant.levelSpacing >= count {
             return ACLevel.second.opacity
-        }else if ACLevel.third.rawValue * store.constant.levelSpacing >= count {
+        } else if ACLevel.third.rawValue * store.constant.levelSpacing >= count {
             return ACLevel.third.opacity
-        }else if ACLevel.fourth.rawValue * store.constant.levelSpacing >= count {
+        } else if ACLevel.fourth.rawValue * store.constant.levelSpacing >= count {
             return ACLevel.fourth.opacity
         }
         return 1.0
     }
 }
 
-extension ACGridStack where B : View, F : View {
-    
+extension ACGridStack where B: View, F: View {
     /// Initializes `ACGridStack`
     /// - Parameters:
     ///   - constant: Settings that define the contribution view.
@@ -176,7 +173,8 @@ extension ACGridStack where B : View, F : View {
     ///   - foreground: The view that is the foreground of the row view.
     init(constant: ACConstant,
          @ViewBuilder background: @escaping (ACIndexSet?, ACData?) -> B,
-         @ViewBuilder foreground: @escaping (ACIndexSet?, ACData?) -> F) {
+         @ViewBuilder foreground: @escaping (ACIndexSet?, ACData?) -> F)
+    {
         self.constant = constant
         self.background = background
         self.foreground = foreground
@@ -185,6 +183,9 @@ extension ACGridStack where B : View, F : View {
 
 struct ACGridStack_Previews: PreviewProvider {
     static var previews: some View {
-        AxisContribution(constant: .init(), source: [])
+        AxisContribution(
+            constant: .init(),
+            source: [:]
+        )
     }
 }

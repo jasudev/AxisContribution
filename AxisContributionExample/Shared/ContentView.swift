@@ -16,13 +16,13 @@ struct ContentView: View {
     @State private var constant: ACConstant = .init(axisMode: .horizontal, levelLabel: .number)
     @State private var rowSize: CGFloat = 11
     @State private var rowImageName: String = ""
-    @State private var dates: [Date] = []
+    @State private var dataSet: [Date: ACData] = [:]
     
     var body: some View {
         VStack {
             Spacer()
             // AxisContribution(constant: constant, source: getDates())
-            AxisContribution(constant: constant, source: dates) { indexSet, data in
+            AxisContribution(constant: constant, source: dataSet) { indexSet, data in
                 if rowImageName.isEmpty {
                     defaultBackground
                 }else {
@@ -64,13 +64,13 @@ struct ContentView: View {
             }
             .pickerStyle(.segmented)
             Button("Refresh Dates") {
-                dates = getDates()
+                dataSet = getDates()
             }
             .padding()
         }
         .padding()
         .onAppear {
-            dates = getDates()
+            dataSet = getDates()
         }
     }
     
@@ -103,11 +103,11 @@ struct ContentView: View {
             .frame(width: rowSize, height: rowSize)
     }
     
-    private func getDates() -> [Date] {
-        var sequenceDatas = [Date]()
+    private func getDates() -> [Date: ACData] {
+        var sequenceDatas = [Date: ACData]()
         for _ in 0..<300 {
             let date = Date.randomBetween(start: Date().dateHalfAyear, end: Date())
-            sequenceDatas.append(date)
+            sequenceDatas[date.startOfDay] = .init(date: date.startOfDay, count: Int.random(in: 0...10))
         }
         return sequenceDatas
     }
