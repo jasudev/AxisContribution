@@ -97,12 +97,4 @@ extension Date {
         let components = calendar.dateComponents([.day], from: self)
         return components.day ?? 1
     }
-    
-    var monthTitle: String {
-        let calendar = Calendar.current
-        let monthTitles = calendar.shortMonthSymbols
-        let components = calendar.dateComponents([.month], from: self)
-        let month = components.month
-        return monthTitles[month! - 1]
-    }
 }

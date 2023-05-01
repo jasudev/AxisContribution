@@ -66,6 +66,9 @@ public struct ACConstant: Equatable {
     /// The label type of the level label.
     public var levelLabel: ACLevelLavel
     
+    /// Whether the January month should be replaced by the year
+    public var showYearForJan: Bool
+    
     /// Initializes `ACConstant`
     /// - Parameters:
     ///   - fromDate: The start date to display the list of contributions. The default value is `1 year from today.`.
@@ -76,6 +79,7 @@ public struct ACConstant: Equatable {
     ///   - font: The font used for text. The default value is `.system(size: 9)`.
     ///   - showLevelView: Whether the level label below the grid view is visible. The default value is `true`.
     ///   - levelLabel: The label type of the level label. The default value is `.moreOrLess`.
+    ///   - showYearForJan: Show the year instead of the January label. The default value is `false`.
     public init(from fromDate: Date? = nil,
                 to toDate: Date? = nil,
                 spacing: CGFloat = 4,
@@ -83,7 +87,8 @@ public struct ACConstant: Equatable {
                 axisMode: ACAxisMode = .horizontal,
                 font: Font = .system(size: 9),
                 showLevelView: Bool = true,
-                levelLabel: ACLevelLavel = .moreOrLess) {
+                levelLabel: ACLevelLavel = .moreOrLess,
+                showYearForJan: Bool = false) {
         self.fromDate = fromDate == nil ? Date().dateYearAgo : fromDate!
         self.toDate = toDate == nil ? Date() : toDate!
         self.spacing = spacing
@@ -92,6 +97,7 @@ public struct ACConstant: Equatable {
         self.font = font
         self.showLevelView = showLevelView
         self.levelLabel = levelLabel
+        self.showYearForJan = showYearForJan
     }
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
