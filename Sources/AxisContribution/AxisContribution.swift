@@ -71,7 +71,7 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
                                 }
                         }
                         .contentShape(Rectangle())
-                    }else {
+                    } else {
                         VStack(spacing: 0) {
                             content
                         }
@@ -85,12 +85,17 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
         .onChange(of: sourceDatas) { newValue in
             store.setup(constant: self.constant, source: newValue)
         }
+        .onChange(of: externalDatas) { newValue in
+            if let newValue {
+                store.setup(constant: self.constant, external: newValue)
+            }
+        }
         .onAppear(perform: {
             self.fetch()
         })
     }
     
-    //MARK: - Properties
+    // MARK: - Properties
     
     /// A content view that displays a grid view.
     private var content: some View {
@@ -127,7 +132,7 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
                     .font(constant.font)
                     .opacity(0.6)
                 HStack(spacing: 0) {
-                    ForEach(ACLevel.allCases, id:\.self) { level in
+                    ForEach(ACLevel.allCases, id: \.self) { level in
                         ZStack {
                             getBackgroundView(nil, nil)
                             getForegroundView(nil, nil)
@@ -142,7 +147,7 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
         }
     }
     
-    //MARK: - Methods
+    // MARK: - Methods
     
     /// The background view of the row view.
     /// - Parameters:
@@ -153,7 +158,7 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
         Group {
             if let background = background {
                 background(indexSet, data)
-            }else {
+            } else {
                 defaultBackground
             }
         }
@@ -168,7 +173,7 @@ public struct AxisContribution<B, F>: View where B: View, F: View {
         Group {
             if let foreground = foreground {
                 foreground(indexSet, data)
-            }else {
+            } else {
                 defaultForeground
             }
         }
