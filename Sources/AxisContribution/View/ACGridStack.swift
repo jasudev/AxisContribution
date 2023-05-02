@@ -49,7 +49,7 @@ struct ACGridStack<B, F>: View where B: View, F: View {
         let spacing = store.constant.spacing
         return ZStack {
             if constant.axisMode == .horizontal {
-                HStack(alignment: .top, spacing: spacing) {
+                LazyHStack(alignment: .top, spacing: spacing) {
                     VStack(alignment: .trailing, spacing: 0) {
                         Text("M")
                             .frame(height: rowSize.height)
@@ -62,7 +62,8 @@ struct ACGridStack<B, F>: View where B: View, F: View {
                             .padding(.top, rowSize.height + spacing * 2)
                     }
                     ForEach(Array(store.datas.enumerated()), id: \.offset) { column, datas in
-                        LazyVStack(alignment: .leading, spacing: spacing) {
+                        VStack(alignment: .leading, spacing: spacing) {
+                            
                             Rectangle()
                                 .fill(Color.clear)
                                 .frame(width: rowSize.height, height: rowSize.height)
@@ -74,7 +75,7 @@ struct ACGridStack<B, F>: View where B: View, F: View {
                     }
                 }
             } else {
-                VStack(alignment: .leading, spacing: spacing) {
+                LazyVStack(alignment: .leading, spacing: spacing) {
                     ZStack(alignment: .bottom) {
                         let size = titleWidth
                         Text("M")
@@ -185,6 +186,11 @@ struct ACGridStack_Previews: PreviewProvider {
     static var previews: some View {
         AxisContribution(
             constant: .init(),
+            source: [:]
+        )
+        
+        AxisContribution(
+            constant: .init(axisMode: .vertical),
             source: [:]
         )
     }
