@@ -124,8 +124,8 @@ struct ACGridStack<B, F>: View where B: View, F: View {
         ZStack {
             if !store.datas[0].isEmpty {
                 if column >= 1 {
-                    if store.datas[column - 1][0].date.monthTitle != store.datas[column][0].date.monthTitle {
-                        Text(store.datas[column][0].date.monthTitle)
+                    if monthTitle(store.datas[column - 1][0].date) != monthTitle(store.datas[column][0].date) {
+                        Text(monthTitle(store.datas[column][0].date))
                             .lineLimit(1)
                             .fixedSize(horizontal: true, vertical: false)
                             .takeSize($_titleSize)
@@ -133,7 +133,7 @@ struct ACGridStack<B, F>: View where B: View, F: View {
                 } else {
                     let date = store.datas[column][0].date
                     if date > constant.fromDate && date < constant.toDate {
-                        Text(date.monthTitle)
+                        Text(monthTitle(date))
                             .lineLimit(1)
                             .fixedSize(horizontal: true, vertical: false)
                             .takeSize($_titleSize)
@@ -144,6 +144,17 @@ struct ACGridStack<B, F>: View where B: View, F: View {
         .onChange(of: _titleSize) { _ in
             titleWidth = max(titleWidth, _titleSize.width)
         }
+    }
+    
+    private func monthTitle(_ date: Date) -> String {
+        let calendar = Calendar.current
+        let monthTitles = calendar.shortMonthSymbols
+        let components = calendar.dateComponents([.month, .year], from: date)
+        let month = components.month
+        if month == 1, constant.showYearForJan {
+            return String(components.year!)
+        }
+        return monthTitles[month! - 1]
     }
     
     /// Returns the opacity value based on the level.
